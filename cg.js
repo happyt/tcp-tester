@@ -40,8 +40,8 @@ var CG = {
             dlog('client timed out');
         });
 
-        this.socket.on('error', function() {
-            dlog('client error');
+        this.socket.on('error', function(e) {
+            dlog('client error ' + e);
         });
 
         this.socket.on('connect', function() {

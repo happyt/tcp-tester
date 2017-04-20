@@ -1,38 +1,15 @@
 var readline = require('readline');
 var rl;
-var net = require('net');
 var port = 8080;
+var cg = require('./cg');
 
-var client = new net.Socket();
+cg.ip = '127.0.0.1'
+cg.port = port;
 
+console.log('Opening cg...');
+cg.open()
+cg.sendCommand('Hello world.');
 
-client.on('data', function(data) {
-	console.log('Received: ' + data);
-});
-
-client.on('end', function() {
-    this.live = false;
-    dlog('client ended');
-});
-
-client.on('timeout', function() {
-    dlog('client timed out');
-});
-
-client.on('error', function() {
-    dlog('client error');
-});
-
-client.on('close', function() {
-	console.log('Connection closed');
-});
-function dlog(data) {
-        console.log('\x1b[36m\>>>\x1b[37m ' + data);
-}
-client.connect(port, '127.0.0.1', function() {
-	console.log('\x1b[36m Connected to port: ' + port + '\x1b[37m');
-	client.write('Hello world.');
-});
 
 rl = readline.createInterface(process.stdin, process.stdout, null);
 rl.setPrompt('> ');
@@ -53,17 +30,17 @@ rl.on('line', function(cmd) {
         // parse the command
         //
         if (cmd === "v") {
-            viz.version(false);
+            cg.version(false);
         } else if (cmd === "r") {
-            viz.replySwap();
+            cg.replySwap();
         } else if (cmd === "q") {
-            viz.quietSwap();
+            cg.quietSwap();
         } else if (cmd === "d") {
-            viz.destroy();
+            cg.destroy();
         } else if (cmd === "e") {
-            viz.end();
+            cg.end();
         } else {
-            viz.sendCommand(cmd);       // eg MAIN VERSION
+            cg.sendCommand(cmd);       // eg MAIN VERSION
         }
         //    console.log('You typed:', cmd);
         //    console.log('Type "quit" to exit');
